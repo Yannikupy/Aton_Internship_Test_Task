@@ -1,6 +1,6 @@
 package First;
 
-public class FirstTaskApp {
+public class MemoryDbApp {
     public static void main(String[] args) {
         MemoryDb memoryDb = new MemoryDb();
         try {

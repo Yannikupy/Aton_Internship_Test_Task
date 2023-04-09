@@ -6,14 +6,6 @@ import org.junit.Test;
 public class MemoryDbTest {
 
     @Test
-    public void getByValue() throws AccountAlreadyExistsException, AccountNotFoundException {
-        MemoryDb memoryDb = new MemoryDb();
-        Account accountToInsert = new Account(1L, "Warm", 2.5);
-        memoryDb.insert(1L, "Warm", 2.5);
-        Assert.assertEquals(accountToInsert, memoryDb.getByValue(2.5).get(0));
-    }
-
-    @Test
     public void getByAccount() throws AccountAlreadyExistsException, AccountNotFoundException {
         MemoryDb memoryDb = new MemoryDb();
         Account accountToInsert = new Account(1L, "Warm", 2.5);
@@ -28,6 +20,15 @@ public class MemoryDbTest {
         memoryDb.insert(1L, "Warm", 2.5);
         Assert.assertEquals(accountToInsert, memoryDb.getByName("Warm").get(0));
     }
+
+    @Test
+    public void getByValue() throws AccountAlreadyExistsException, AccountNotFoundException {
+        MemoryDb memoryDb = new MemoryDb();
+        Account accountToInsert = new Account(1L, "Warm", 2.5);
+        memoryDb.insert(1L, "Warm", 2.5);
+        Assert.assertEquals(accountToInsert, memoryDb.getByValue(2.5).get(0));
+    }
+
 
     @Test
     public void updateAccount() throws AccountAlreadyExistsException, AccountNotFoundException {
@@ -60,6 +61,7 @@ public class MemoryDbTest {
     public void remove() throws AccountAlreadyExistsException, AccountNotFoundException {
         MemoryDb memoryDb = new MemoryDb();
         memoryDb.insert(1L, "Warm", 2.5);
+        memoryDb.insert(2L, "Warm", 2.5);
         memoryDb.remove(1L);
         memoryDb.getByAccount(1L);
     }

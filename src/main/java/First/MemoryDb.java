@@ -3,7 +3,7 @@ package First;
 import java.util.*;
 
 public class MemoryDb {
-    private List<Account> sortedAccount = new ArrayList<>();
+    private List<Account> sortedAccounts = new ArrayList<>();
     private List<Account> sortedNames = new ArrayList<>();
     private List<Account> sortedValues = new ArrayList<>();
 
@@ -23,10 +23,10 @@ public class MemoryDb {
                 throw new AccountAlreadyExistsException("Такой аккаунт уже существует в базе");
             }
         } catch (AccountNotFoundException e) {
-            sortedAccount.add(insertAccount);
+            sortedAccounts.add(insertAccount);
             sortedNames.add(insertAccount);
             sortedValues.add(insertAccount);
-            sortedAccount.sort(Comparator.comparing(Account::getAccount));
+            sortedAccounts.sort(Comparator.comparing(Account::getAccount));
             sortedNames.sort(Comparator.comparing(Account::getName));
             sortedValues.sort(Comparator.comparing(Account::getValue));
         }
@@ -42,42 +42,12 @@ public class MemoryDb {
      */
 
     public Account getByAccount(Long account) throws AccountNotFoundException {
-        int posOfRecord = Collections.binarySearch(sortedAccount, new Account(account, null, null),
+        int posOfRecord = Collections.binarySearch(sortedAccounts, new Account(account, null, null),
                 Comparator.comparing(Account::getAccount));
-        if (posOfRecord < 0 || posOfRecord == sortedAccount.size()) {
+        if (posOfRecord < 0 || posOfRecord == sortedAccounts.size()) {
             throw new AccountNotFoundException("Аккаунт не найден");
         }
-        return sortedAccount.get(posOfRecord);
-    }
-
-    /**
-     * Finds sublist with accounts matching key
-     *
-     * @param posOfRecord
-     * @param list
-     * @param key
-     * @param <T>
-     * @return List<Account> with accounts matching key
-     */
-    private <T> List<Account> binarySearchFindSublist(int posOfRecord, List<Account> list, T key) {
-        int firstMatch = posOfRecord;
-        int lastMatch = posOfRecord;
-        if (key instanceof String) {
-            while (firstMatch > 0 && Objects.equals(list.get(firstMatch - 1).getName(), key)) {
-                firstMatch--;
-            }
-            while (lastMatch < list.size() - 1 && Objects.equals(list.get(lastMatch + 1).getName(), key)) {
-                lastMatch++;
-            }
-        } else if (key instanceof Double) {
-            while (firstMatch > 0 && Objects.equals(list.get(firstMatch - 1).getValue(), key)) {
-                firstMatch--;
-            }
-            while (lastMatch < list.size() - 1 && Objects.equals(list.get(lastMatch + 1).getValue(), key)) {
-                lastMatch++;
-            }
-        }
-        return list.subList(firstMatch, lastMatch + 1);
+        return sortedAccounts.get(posOfRecord);
     }
 
     /**
@@ -112,18 +82,6 @@ public class MemoryDb {
             throw new AccountNotFoundException("Аккаунт не найден");
         }
         return binarySearchFindSublist(posOfRecord, sortedValues, value);
-    }
-
-    /**
-     * Removes account from cache
-     *
-     * @param account
-     */
-    public void remove(Long account) {
-        Account removeAccount = new Account(account, null, null);
-        sortedAccount.remove(removeAccount);
-        sortedNames.remove(removeAccount);
-        sortedValues.remove(removeAccount);
     }
 
     /**
@@ -180,4 +138,48 @@ public class MemoryDb {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Removes account from cache
+     *
+     * @param account
+     */
+    public void remove(Long account) {
+        Account removeAccount = new Account(account, null, null);
+        sortedAccounts.remove(removeAccount);
+        sortedNames.remove(removeAccount);
+        sortedValues.remove(removeAccount);
+    }
+
+    /**
+     * Finds sublist with accounts matching key
+     *
+     * @param posOfRecord
+     * @param list
+     * @param key
+     * @param <T>
+     * @return List<Account> with accounts matching key
+     */
+    private <T> List<Account> binarySearchFindSublist(int posOfRecord, List<Account> list, T key) {
+        int firstMatch = posOfRecord;
+        int lastMatch = posOfRecord;
+        if (key instanceof String) {
+            while (firstMatch > 0 && Objects.equals(list.get(firstMatch - 1).getName(), key)) {
+                firstMatch--;
+            }
+            while (lastMatch < list.size() - 1 && Objects.equals(list.get(lastMatch + 1).getName(), key)) {
+                lastMatch++;
+            }
+        } else if (key instanceof Double) {
+            while (firstMatch > 0 && Objects.equals(list.get(firstMatch - 1).getValue(), key)) {
+                firstMatch--;
+            }
+            while (lastMatch < list.size() - 1 && Objects.equals(list.get(lastMatch + 1).getValue(), key)) {
+                lastMatch++;
+            }
+        }
+        return list.subList(firstMatch, lastMatch + 1);
+    }
+
+
 }
